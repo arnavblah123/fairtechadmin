@@ -40,6 +40,11 @@ VERCEL_TOKEN=xxxxxxxx node scripts/push-env.mjs deploy.env
 # in a team account add VERCEL_TEAM_SLUG=your-team-slug
 ```
 
+No file handy? Every key in `deploy.env.example` can instead be set as an
+environment variable (for example as secrets of a Claude cloud environment or
+a CI job) and the script picks them up with no file: `node scripts/push-env.mjs`.
+`VERCEL_TOKEN` must be an environment variable either way.
+
 This sets all variables on **fairtechadmin** and `ADMIN_FEED_KEY` on every
 project in `FEED_PROJECTS`. Then **Redeploy** each project (Vercel →
 Deployments → ⋯ → Redeploy) or merge the `claude/jolly-meitner-mg4cyy`

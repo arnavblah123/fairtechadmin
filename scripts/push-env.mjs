@@ -6,6 +6,10 @@
 // deploy.env is a plain KEY=VALUE file (see deploy.env.example). Lines are
 // pushed to the fairtechadmin project; ADMIN_FEED_KEY is also pushed to every
 // project listed in FEED_PROJECTS. Existing values are overwritten (upsert).
+// Any key named in deploy.env.example that is set in the process environment
+// is used too (it wins over the file), so in a CI job or a cloud session you
+// can store every value as an environment secret and run the script with no
+// file at all: `node scripts/push-env.mjs`.
 // Optional: VERCEL_TEAM_ID (or VERCEL_TEAM_SLUG) when the projects live in a
 // team; CREATE_ADMIN_PROJECT=1 creates the fairtechadmin project from GitHub
 // if it does not exist yet.
@@ -18,9 +22,13 @@ import fs from "node:fs";
 const token = process.env.VERCEL_TOKEN;
 if (!token) die("VERCEL_TOKEN is not set. Create one at https://vercel.com/account/tokens");
 const file = process.argv[2] ?? "deploy.env";
-if (!fs.existsSync(file)) die(`${file} not found. Copy deploy.env.example to ${file} and fill it in.`);
+const example = new URL("../deploy.env.example", import.meta.url);
+const knownKeys = Object.keys(parseEnv(fs.readFileSync(example, "utf8")));
 
-const vars = parseEnv(fs.readFileSync(file, "utf8"));
+const vars = fs.existsSync(file) ? parseEnv(fs.readFileSync(file, "utf8")) : {};
+for (const key of knownKeys) if (process.env[key] !== undefined && process.env[key] !== "") vars[key] = process.env[key];
+if (Object.keys(vars).length === 0) die(`${file} not found and no variables set in the environment. Copy deploy.env.example to ${file} and fill it in.`);
+for (const [k, v] of Object.entries(vars)) if (v.startsWith("<<")) die(`${k} still has the placeholder "${v}" — fill it in or leave it empty.`);
 const adminProject = vars.ADMIN_PROJECT || "fairtechadmin";
 const feedProjects = (vars.FEED_PROJECTS || "").split(",").map((s) => s.trim()).filter(Boolean);
 const skip = new Set(["ADMIN_PROJECT", "FEED_PROJECTS"]);
