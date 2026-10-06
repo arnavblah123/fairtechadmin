@@ -8,10 +8,10 @@ export function NotesPanel({ notes, apps, compact }: { notes: OwnerNote[]; apps:
   const now = Date.now();
   return (
     <div className="space-y-2">
-      <form action={addNoteAction} className="card p-3 flex flex-col sm:flex-row gap-2">
+      <form action={addNoteAction} className="card p-3 flex flex-col sm:flex-row gap-2 min-w-0">
         <input name="text" className="input flex-1" placeholder="Follow up… (e.g. ask Nilesh about JSW quote validity)" required />
-        <div className="flex gap-2">
-          <select name="app" className="input !w-auto text-sm" defaultValue="">
+        <div className="flex flex-wrap gap-2">
+          <select name="app" className="input !w-auto min-w-0 text-sm" defaultValue="">
             <option value="">Any app</option>
             {apps.map((a) => (
               <option key={a.key} value={a.key}>
@@ -19,7 +19,7 @@ export function NotesPanel({ notes, apps, compact }: { notes: OwnerNote[]; apps:
               </option>
             ))}
           </select>
-          <input type="date" name="dueAt" className="input !w-auto text-sm" />
+          <input type="date" name="dueAt" className="input !w-auto min-w-0 text-sm" />
           <button className="btn btn-primary">Add</button>
         </div>
       </form>

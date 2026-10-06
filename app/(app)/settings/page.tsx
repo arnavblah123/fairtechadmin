@@ -49,7 +49,7 @@ export default async function SettingsPage() {
         <p className="text-sm text-slate-600 -mt-1">
           Each app needs its latest version deployed (it adds <code className="text-xs bg-slate-100 px-1 rounded">/api/admin-feed</code>) and the same <code className="text-xs bg-slate-100 px-1 rounded">ADMIN_FEED_KEY</code> in its environment. URLs below default from env vars; saving here overrides them.
         </p>
-        <div className="grid lg:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {apps.map((a) => (
             <div key={a.key} className="space-y-1">
               <AppForm app={a} note={notes.get(a.key)} />

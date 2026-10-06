@@ -83,7 +83,7 @@ export function ReportLinks({ items }: { items: UReport[] }) {
   const byApp = new Map<string, UReport[]>();
   for (const r of items) (byApp.get(r.app.key) ?? byApp.set(r.app.key, []).get(r.app.key)!).push(r);
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {[...byApp.values()].map((group) => (
         <div key={group[0].app.key} className="card p-3">
           <div className="mb-2">

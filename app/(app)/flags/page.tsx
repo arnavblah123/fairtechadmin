@@ -25,7 +25,7 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
       <FilterBar base="/flags" statuses={o.statuses} units={o.units} current={f} />
       {crit.length > 0 && (
         <Section title="Critical" count={crit.length}>
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {crit.map((x) => (
               <FlagCard key={`${x.app.key}:${x.id}`} f={x} />
             ))}
@@ -34,7 +34,7 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
       )}
       {warn.length > 0 && (
         <Section title="Warnings" count={warn.length}>
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {warn.map((x) => (
               <FlagCard key={`${x.app.key}:${x.id}`} f={x} />
             ))}
@@ -43,7 +43,7 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
       )}
       {info.length > 0 && (
         <Section title="Good to know" count={info.length}>
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {info.map((x) => (
               <FlagCard key={`${x.app.key}:${x.id}`} f={x} />
             ))}
@@ -53,7 +53,7 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
       {!items.length && <Empty>No flags{f.app || f.unit ? " for this filter" : ""}. All clear.</Empty>}
       {hidden.length > 0 && (
         <Section title="Snoozed" count={hidden.length}>
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {hidden.map((x) => (
               <FlagCard key={`${x.app.key}:${x.id}`} f={x} hidden />
             ))}

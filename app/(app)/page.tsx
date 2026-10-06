@@ -2,7 +2,7 @@ import Link from "next/link";
 import { loadOverview } from "@/lib/feed/load";
 import { oldestPendingHours, type UKpi } from "@/lib/feed/aggregate";
 import { AppStatusStrip } from "@/components/app-status";
-import { KpiGrid } from "@/components/kpi-strip";
+import { KpiTile } from "@/components/kpi-strip";
 import { ApprovalCard } from "@/components/approval-card";
 import { FlagCard } from "@/components/flag-card";
 import { ActivityList, MessageList } from "@/components/lists";
@@ -68,8 +68,8 @@ export default async function HomePage() {
 
       <AppStatusStrip statuses={o.statuses} />
 
-      <div className="grid lg:grid-cols-5 gap-5">
-        <div className="lg:col-span-3 space-y-5">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        <div className="lg:col-span-3 min-w-0 space-y-5">
           <Section title="Needs your decision" count={o.approvals.length} href="/approvals">
             {o.approvals.length ? (
               <div className="space-y-2">
@@ -110,7 +110,7 @@ export default async function HomePage() {
           </Section>
         </div>
 
-        <div className="lg:col-span-2 space-y-5">
+        <div className="lg:col-span-2 min-w-0 space-y-5">
           {watch.length > 0 && (
             <Section title="Numbers to watch" href="/reports">
               <div className="grid grid-cols-2 gap-2">
@@ -150,5 +150,5 @@ function greeting() {
 }
 
 function KpiMini({ k }: { k: UKpi }) {
-  return <KpiGrid kpis={[k]} showApp />;
+  return <KpiTile k={k} showApp />;
 }

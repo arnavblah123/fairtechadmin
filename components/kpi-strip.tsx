@@ -11,10 +11,12 @@ const TONE: Record<string, string> = {
 export function KpiTile({ k, showApp }: { k: UKpi; showApp?: boolean }) {
   const inner = (
     <>
-      <div className="text-[11px] uppercase tracking-wide text-slate-500 truncate">
-        {showApp ? <span style={{ color: k.app.color ?? undefined }}>{k.app.label} · </span> : null}
-        {k.label}
-      </div>
+      {showApp && (
+        <div className="text-[10px] font-semibold truncate" style={{ color: k.app.color ?? "#64748b" }}>
+          {k.app.label}
+        </div>
+      )}
+      <div className="text-[11px] uppercase tracking-wide text-slate-500 leading-tight line-clamp-2">{k.label}</div>
       <div className={`text-xl font-bold tabular-nums leading-tight mt-0.5 ${TONE[k.tone ?? "neutral"]}`}>{kpiValue(k.value, k.unit)}</div>
       {k.hint && <div className="text-xs text-slate-500 truncate">{k.hint}</div>}
     </>

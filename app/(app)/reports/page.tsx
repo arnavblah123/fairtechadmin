@@ -29,7 +29,7 @@ export default async function ReportsPage() {
       )}
 
       <Section title="Backlog trend (14 days)">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {o.statuses.map((s) => {
             const pts = tr[s.app.key] ?? [];
             const first = pts[0]?.pendingApprovals;

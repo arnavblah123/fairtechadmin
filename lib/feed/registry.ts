@@ -92,7 +92,7 @@ export async function listApps(includeDisabled = false): Promise<AppConfig[]> {
     });
   }
   const all = [...byKey.values()].sort((a, b) => a.sortOrder - b.sortOrder);
-  if (isMockMode()) return all.map((a) => ({ ...a, enabled: true, baseUrl: a.baseUrl || "https://example.invalid" }));
+  if (isMockMode()) return all.map((a) => ({ ...a, enabled: true }));
   return includeDisabled ? all : all.filter((a) => a.enabled);
 }
 

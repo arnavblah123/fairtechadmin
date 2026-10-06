@@ -31,7 +31,7 @@ export default async function ApprovalsPage({ searchParams }: { searchParams: Pr
         </div>
       )}
       {items.length ? (
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {items.map((a) => (
             <ApprovalCard key={`${a.app.key}:${a.id}`} a={a} />
           ))}
