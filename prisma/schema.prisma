@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// One connected Fairtech app. The secret is never stored here: it is the
+/// ADMIN_FEED_KEY env var (optionally ADMIN_FEED_KEY_<KEY> per app).
+model AppSource {
+  id           String   @id @default(cuid())
+  /// Short lowercase key, must equal `app` in the feed: "production", "store" …
+  key          String   @unique
+  label        String
+  /// Origin the dashboard calls, no trailing slash: https://fairtechproduction.vercel.app
+  baseUrl      String
+  /// Path of the feed on that origin.
+  feedPath     String   @default("/api/admin-feed")
+  /// Origin used for deep links when it differs from baseUrl (Supabase functions vs the SPA).
+  openUrl      String?
+  /// Extra request headers, e.g. {"apikey":"…","Authorization":"Bearer …"} for Supabase.
+  extraHeaders Json?
+  enabled      Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  /// Hex accent used for the app's chip in the UI.
+  color        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// Every button the owner presses from this dashboard, with the source app's answer.
+model ActionLog {
+  id        String   @id @default(cuid())
+  at        DateTime @default(now())
+  actor     String
+  app       String
+  /// approvalId or flagId that was acted on.
+  targetId  String
+  actionId  String
+  title     String
+  note      String?
+  amount    Decimal? @db.Decimal(14, 2)
+  ok        Boolean
+  response  String?
+  latencyMs Int?
+
+  @@index([at])
+  @@index([app, targetId])
+}
+
+/// Flags the owner has seen and decided to snooze: hidden until `until` (or forever when null).
+model FlagAck {
+  id      String    @id @default(cuid())
+  app     String
+  flagId  String
+  ackedBy String
+  ackedAt DateTime  @default(now())
+  note    String?
+  until   DateTime?
+
+  @@unique([app, flagId])
+}
+
+/// The owner's own follow-ups: things to chase, decisions to make, notes to self.
+model OwnerNote {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  text      String
+  /// Optional app key this note is about.
+  app       String?
+  pinned    Boolean   @default(false)
+  done      Boolean   @default(false)
+  dueAt     DateTime?
+
+  @@index([done, pinned])
+}
+
+/// Hourly roll-up per app so the dashboard can show backlog trends and uptime.
+model Snapshot {
+  id               String   @id @default(cuid())
+  at               DateTime @default(now())
+  app              String
+  ok               Boolean
+  latencyMs        Int?
+  pendingApprovals Int      @default(0)
+  pendingAmount    Decimal  @default(0) @db.Decimal(14, 2)
+  criticalFlags    Int      @default(0)
+  warningFlags     Int      @default(0)
+  kpis             Json?
+
+  @@index([app, at])
+}
+
+/// Key/value settings edited from the Settings page (digest hour, recipients …).
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
